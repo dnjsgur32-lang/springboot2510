@@ -1,0 +1,13 @@
+package com.ljh.re_mybatis_thymeleaf;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class ReMybatisThymeleafApplication {
+
+    public static void main (String[] args) {
+        SpringApplication.run(ReMybatisThymeleafApplication.class, args);
+    }
+
+}

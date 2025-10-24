@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>도서 목록</title>
+    <style>
+        :root {
+            --lib-bg: #f7f6f1; /* 아이보리 배경 */
+            --lib-ink: #2e3a2f; /* 잉크색 텍스트 */
+            --lib-accent: #4b7f5a; /* 소나무 그린 */
+            --lib-accent-2: #6aa17a; /* 보조 그린 */
+            --lib-line: #dcd7c9; /* 종이결 라인 */
+            --lib-warn: #c27b27; /* 갈색 경고 */
+            --lib-danger: #a05858; /* 붉은 갈색 */
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        body {
+            font-family: "Noto Sans KR", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+            margin: 32px;
+            color: var(--lib-ink);
+            background: var(--lib-bg);
+        }
+
+        /* 제목: 도서관 간판 느낌의 얇은 라인 */
+        h1 {
+            margin: 0 0 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--lib-accent);
+            letter-spacing: .5px;
+        }
+
+        /* 버튼: 잔잔한 색, 라운드, 그림자 최소화 */
+        .btn{
+            display:inline-flex; align-items:center; justify-content:center;
+            height:42px; padding:0 16px; margin:6px 4px;
+            font-size:14px; color:#fff; text-decoration:none; white-space:nowrap;
+            border-radius:8px; border:0; cursor:pointer;
+            transition:transform .06s ease, opacity .2s ease;
+        }
+        .btn:hover{ opacity:.92; transform:translateY(-1px); }
+        .btn:active{ transform:translateY(0); }
+        .btn-primary{ background:var(--lib-accent); }
+        .btn-warning{ background:var(--lib-warn); }
+        .btn-danger{  background:var(--lib-danger); }
+
+        /* 테이블: 종이 느낌의 라인 + 줄무늬 */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 16px;
+            background: #fff;
+            border: 1px solid var(--lib-line);
+            border-radius: 10px;
+            overflow: hidden; /* 둥근 모서리 적용 */
+        }
+
+        th, td {
+            padding: 12px 14px;
+            text-align: left;
+            border-bottom: 1px solid var(--lib-line);
+        }
+
+        th {
+            background: linear-gradient(0deg, #e7efe9, #eaf3ec);
+            color: var(--lib-ink);
+            font-weight: 700;
+        }
+
+        tbody tr:nth-child(even) {
+            background: #faf9f4;
+        }
+
+        tbody tr:hover {
+            background: #f1efe8;
+        }
+
+        table th:last-child,
+        table th:last-child {
+            text-align: center;
+            width: 180px;
+            white-space: nowrap;
+        }
+
+        .actions { display:inline-flex; gap:8px; align-items:center; }
+        .actions form{ display:inline; margin:0; }
+
+
+        /* 소제목/메타 */
+        small, .meta {
+            color: #6b6b6b;
+        }
+
+        /* 반응형: 화면이 좁아지면 좌우 여백 줄이기 */
+        @media (max-width: 640px) {
+            body {
+                margin: 18px;
+            }
+
+            th, td {
+                padding: 10px 12px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<h1>도서 목록</h1>
+<a href="/books/new" class="btn btn-primary">새 도서 등록</a>
+
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>제목</th>
+        <th>저자</th>
+        <th>가격</th>
+        <th>재고</th>
+        <th>생성일</th>
+        <th>관리</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="book : ${books}">
+        <td th:text="${book.id}"></td>
+        <td th:text="${book.title}"></td>
+        <td th:text="${book.author}"></td>
+        <td th:text="${book.price}"></td>
+        <td th:text="${book.stock}"></td>
+        <td th:text="${#temporals.format(book.createdAt, 'yyyy-MM-dd HH:mm')}"></td>
+        <td>
+            <span class="actions">
+            <a th:href="@{/books/{id}/edit(id=${book.id})}" class="btn btn-warning">저장/수정</a>
+            <form th:action="@{/books/{id}/delete(id=${book.id})}" method="post" style="display:inline;">
+                <button type="submit" class="btn btn-danger"
+                        onclick="return confirm('정말 삭제하시겠습니까?')">삭제</button>
+            </form>
+            </span>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+
+</html>
